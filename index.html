@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220"><title>Instrutor Diego Andrade • Pro</title>
+<!-- Vinculação do Manifest para o PWABuilder -->
+<link rel="manifest" href="./manifest.json">
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#19283d;--line:#2b3d55;--txt:#f4f7fb;--muted:#9aabc1;--blue:#4ab0ff;--cyan:#35d5ce;--green:#42d7a0;--yellow:#ffd06d;--red:#ff7183;--purple:#b7a0ff}
+*{box-sizing:border-box}
+html, body{height:100%;margin:0;padding:0;overflow:hidden;background:radial-gradient(ellipse at top,#172a43 0,#0b1220 55%);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--txt)}
+
+.app{max-width:900px;margin:auto;height:100vh;display:flex;flex-direction:column;padding:10px 10px 0}
+.hero{padding:12px 16px;border-radius:18px;border:1px solid #314762;background:linear-gradient(135deg,#1c3553,#101a2b);display:flex;gap:12px;align-items:center;box-shadow:0 10px 25px #0003;flex-shrink:0}
+.logo{width:45px;height:45px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#071525;font-weight:950;font-size:20px;flex-shrink:0}
+.eyebrow{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);font-weight:900}
+.hero h1{font-size:18px;line-height:1.15;margin:2px 0}
+.hero p{font-size:11px;color:var(--muted);margin:0}
+.pill{margin-left:auto;border:1px solid #3d5a79;border-radius:99px;padding:4px 8px;color:#c6e5ff;font-size:10px;font-weight:800;white-space:nowrap}
+
+.nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0;flex-shrink:0;background:transparent}
+.nav button,.tab{white-space:nowrap;background:#132034;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}
+.nav button.active,.tab.active{background:#20496c;color:#fff;border-color:#3e8ec8}
+
+.main-content{flex:1;overflow-y:auto;padding-bottom:80px;scroll-behavior:smooth}
+
+.page{display:none}.page.active{display:block}
+.card{background:#121d2eec;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.head h2,h2{font-size:15px;margin:0 0 10px}.head h2{margin:0}
+.muted{color:var(--muted)}.tiny{font-size:11px;line-height:1.4;color:var(--muted)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}.full{grid-column:1/-1}
+.field label{display:block;color:var(--muted);font-size:10px;font-weight:800;margin-bottom:4px}
+input,select,textarea{width:100%;background:#0b1525;color:var(--txt);border:1px solid #33465f;border-radius:10px;padding:9px;font:inherit;font-size:12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+textarea{min-height:70px;resize:vertical}
+
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{border:1px solid transparent;border-radius:10px;padding:9px 12px;font-weight:850;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.btn.primary{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#071525}
+.btn.secondary{background:#23354d;color:#f4f7fb;border-color:#3b506b}
+.btn.success{background:#1b4d3e;color:#85f3c6;border-color:#2a7a61}
+.btn.danger{background:#49212c;color:#ffb3bd;border-color:#713341}
+.btn.small{padding:6px 8px;font-size:10px}
+.btn:active,.nav button:active{transform:scale(.98)}
+
+/* Perfil e Foto do Aluno */
+.photo-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #0b1525;
+  border: 1px solid #33465f;
+  border-radius: 12px;
+  padding: 10px;
+}
+.student-avatar-preview {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--cyan);
+  background: #132034;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  color: var(--muted);
+  flex-shrink: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+.student-avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.student-card-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--cyan);
+  flex-shrink: 0;
+  background: #132034;
+  cursor: zoom-in;
+}
+
+/* Modal de Zoom da Foto do Aluno */
+.photo-zoom-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(7, 15, 30, 0.88);
+  backdrop-filter: blur(8px);
+  z-index: 10005;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease forwards;
+  cursor: zoom-out;
+}
+.photo-zoom-container {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: scaleUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.photo-zoom-container img {
+  width: 100%;
+  height: auto;
+  max-width: 380px;
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: 18px;
+  border: 2px solid var(--cyan);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 25px rgba(53, 213, 206, 0.3);
+}
+.photo-zoom-name {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--txt);
+  background: rgba(18, 29, 46, 0.9);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+/* Seletor customizado de aluno elegante */
+.student-picker-trigger {
+  width: 100%;
+  background: #0b1525;
+  border: 1px solid #33465f;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--txt);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.student-picker-trigger:hover {
+  border-color: var(--blue);
+}
+.student-picker-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(7, 15, 30, 0.85);
+  backdrop-filter: blur(6px);
+  z-index: 10002;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease forwards;
+}
+.student-picker-card {
+  background: linear-gradient(135deg, #16263d, #0d1727);
+  border: 1px solid var(--cyan);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 20px rgba(53, 213, 206, 0.15);
+  animation: scaleUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.student-picker-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 2px;
+}
+.student-picker-item {
+  background: #0b1525;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.student-picker-item:hover {
+  border-color: var(--cyan);
+  background: #132238;
+  transform: translateY(-1px);
+}
+.picker-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--cyan);
+  background: #18283f;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.picker-info {
+  flex: 1;
+  min-width: 0;
+}
+.picker-info strong {
+  font-size: 13px;
+  color: var(--txt);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.picker-info small {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.metric{background:#0b1626;border:1px solid var(--line);border-radius:12px;padding:9px 6px}
+.metric b{font-size:22px;display:block;line-height:1.2}
+.metric span{font-size:9px;color:var(--muted)}
+.metric.blue{border-color:#28618b;background:#122943}
+.status{margin-top:8px;border-radius:10px;padding:9px;font-size:11px;font-weight:850;background:#123a31;color:var(--green)}
+.status.warn{background:#49391d;color:var(--yellow)}
+.status.bad{background:#4b202b;color:#ff9aa6}
+
+/* Placar Flutuante em Tempo Real */
+.floating-live-score {
+  background: linear-gradient(135deg, #162a45, #0d1829);
+  border: 1px solid var(--cyan);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 10px rgba(53, 213, 206, 0.2);
+  position: sticky;
+  top: 5px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+.live-score-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.live-stat {
+  text-align: left;
+}
+.live-stat b {
+  font-size: 16px;
+  display: block;
+  line-height: 1.1;
+  color: var(--cyan);
+  transition: color 0.3s;
+}
+.live-stat span {
+  font-size: 8px;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.live-status-badge {
+  background: #123a31;
+  color: var(--green);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 900;
+  border: 1px solid rgba(66, 215, 160, 0.4);
+  max-width: 170px;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s ease;
+}
+.live-status-badge.bad { 
+  background: #4b202b; 
+  color: var(--red); 
+  border-color: rgba(255, 113, 131, 0.5);
+  box-shadow: 0 0 10px rgba(255, 113, 131, 0.3);
+}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.barrow{display:grid;grid-template-columns:minmax(0,1fr) 2fr 35px;align-items:center;gap:8px;margin:8px 0;font-size:11px}
+.bartrack{height:8px;background:#26354a;border-radius:99px;overflow:hidden}
+.barfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:99px}
+.empty{text-align:center;padding:15px 8px;color:var(--muted);font-size:11px}
+.listrow{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.listrow:last-child{border-bottom:0}
+.listrow strong{font-size:12px;display:block}
+.listrow small{font-size:10px;color:var(--muted)}
+.right{text-align:right;white-space:nowrap}
+.score{font-weight:950;font-size:15px}
+.tag{display:inline-block;border-radius:5px;padding:3px 5px;font-size:9px;font-weight:900;margin:2px 0}
+.p05{background:#2d3a4e;color:#b0c4de}
+.p1{background:#183d32;color:#7ce8bd}.p2{background:#433a1d;color:#ffe18a}.p4{background:#482d1e;color:#ffb68e}.p6{background:#4b202b;color:#ff9aa6}.p-incapacidade{background:#462846;color:#e3bbff}
+
+.studentgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.student{background:#0d1828;border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;gap:10px;align-items:flex-start}
+.student-info{flex:1;min-width:0}
+.student strong{font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.student .sub{font-size:10px;color:var(--muted);margin:3px 0 8px}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}
+.faultgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fault{background:#0c1727;border:1px solid var(--line);border-radius:11px;padding:9px;text-align:left;color:var(--txt);cursor:pointer;min-height:70px}
+.fault strong{display:block;font-size:11px;line-height:1.25;margin:4px 0}
+.fault small{font-size:9px;color:var(--muted)}
+.checkline{display:flex;align-items:flex-start;gap:6px;font-size:11px;color:var(--muted)}
+.checkline input{width:auto;margin-top:2px}
+.note{border-left:3px solid var(--yellow);padding:8px 10px;background:#342b1a;border-radius:0 8px 8px 0;font-size:10px;color:#ffe1a0;line-height:1.4}
+
+.preview-box{background:#ffffff;color:#1e293b;border-radius:12px;padding:20px;font-size:12px;line-height:1.5;box-shadow:0 4px 15px rgba(0,0,0,0.3)}
+
+/* Modal de Confirmação Moderno */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(7, 15, 30, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease forwards;
+}
+.modal-card {
+  background: linear-gradient(135deg, #16263d, #0d1727);
+  border: 1px solid #3d5a79;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 380px;
+  padding: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(53, 213, 206, 0.1);
+  text-align: center;
+  animation: scaleUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.modal-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff7183, #c92a39);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 20px; font-weight: 900;
+  margin: 0 auto 12px;
+  box-shadow: 0 5px 15px rgba(255, 113, 131, 0.3);
+}
+.modal-card h3 {
+  font-size: 16px; margin: 0 0 6px 0; color: #f4f7fb;
+}
+.modal-card p {
+  font-size: 12px; color: var(--muted); margin: 0 0 16px 0; line-height: 1.4;
+}
+.modal-btns {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleUp { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+#toastContainer {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 92%;
+  max-width: 400px;
+  pointer-events: none;
+}
+.toast {
+  background: linear-gradient(135deg, rgba(18, 41, 67, 0.95), rgba(11, 21, 37, 0.98));
+  color: #f4f7fb;
+  border: 1px solid #35d5ce;
+  padding: 14px 18px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(53, 213, 206, 0.2);
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+  animation: slideDown 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, fadeOut 0.4s ease 3s forwards;
+  pointer-events: auto;
+}
+.toast .toast-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #071525;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.toast.error {
+  border-color: var(--red);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 113, 131, 0.2);
+}
+.toast.error .toast-icon {
+  background: linear-gradient(135deg, #ff7183, #c92a39);
+  color: #fff;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-15px) scale(0.9); visibility: hidden; }
+}
+
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#0b1220ee;border-top:1px solid #293b53;padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:5;backdrop-filter:blur(12px)}
+.bottominner{max-width:900px;width:100%;display:flex;gap:8px}
+.bottom .btn{flex:1}
+
+@media(max-width:480px){
+.hero{padding:10px}.hero h1{font-size:16px}.pill{display:none}
+.fields,.grid2{grid-template-columns:1fr}.full{grid-column:auto}
+.metrics{grid-template-columns:repeat(2,1fr)}
+.studentgrid{grid-template-columns:1fr}
+.faultgrid{grid-template-columns:1fr 1fr}
+.metric b{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<div id="toastContainer"></div>
+<div id="modalContainer"></div>
+
+<div class="app">
+<header class="hero">
+  <div class="logo">DA</div>
+  <div>
+    <div class="eyebrow">Painel profissional do instrutor</div>
+    <h1>Instrutor Diego Andrade</h1>
+    <p>Avaliação prática • acompanhamento de alunos • Categoria B</p>
+  </div>
+  <div class="pill">VERSÃO PRO</div>
+</header>
+
+<!-- NAVEGAÇÃO -->
+<nav class="nav no-print" id="nav">
+  <button type="button" class="active" data-page="register">Novo Cadastro</button>
+  <button type="button" data-page="students">Alunos</button>
+  <button type="button" data-page="lesson">Nova avaliação</button>
+  <button type="button" data-page="dashboard">Visão geral</button>
+  <button type="button" data-page="history">Histórico</button>
+  <button type="button" data-page="settings">Configurações</button>
+</nav>
+
+<div class="main-content">
+  <!-- PÁGINA 1: NOVO CADASTRO COM FOTO -->
+  <section class="page active" id="register">
+   <div class="card">
+    <h2 id="studentFormTitle">Cadastrar Novo Aluno</h2>
+    <div class="fields">
+      
+      <!-- FOTO DO ALUNO -->
+      <div class="field full">
+        <label>Foto de Identificação do Aluno</label>
+        <div class="photo-upload-container">
+          <div class="student-avatar-preview" id="avatarPreviewContainer">
+            👤
+          </div>
+          <div style="flex:1">
+            <p class="tiny" style="margin:0 0 6px 0">Selecione uma foto da galeria do seu dispositivo.</p>
+            
+            <input type="file" id="galleryInput" accept="image/*" style="display:none">
+            
+            <div class="btns" style="margin:0">
+              <button type="button" class="btn primary small" id="choosePhotoBtn">📁 Selecionar Foto</button>
+              <button type="button" class="btn danger small" id="removePhotoBtn" style="display:none">Remover Foto</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field full"><label>Nome completo *</label><input id="sName" placeholder="Nome do aluno"></div>
+      <div class="field"><label>Telefone (opcional)</label><input id="sPhone" type="tel" placeholder="(21) 99999-9999"></div>
+      <div class="field"><label>Categoria</label><select id="sCategory"><option>B</option><option>A</option><option>AB</option><option>Outra</option></select></div>
+      <div class="field full"><label>Endereço completo</label><input id="sAddress" placeholder="Rua, número, bairro, complemento"></div>
+      <div class="field"><label>Pacote de Aulas Contratado</label><input id="sPackage" type="number" min="1" value="15" placeholder="Ex.: 15, 20"></div>
+      <div class="field"><label>Valor Pago (R$)</label><input id="sPrice" type="number" step="0.01" placeholder="Ex.: 1200.00"></div>
+      <div class="field"><label>Forma de Pagamento</label>
+        <select id="sPaymentType">
+          <option value="avista">À vista</option>
+          <option value="parcelado">Parcelado</option>
+        </select>
+      </div>
+      <div class="field" id="installmentsField" style="display:none;"><label>Número de Parcelas</label><input id="sInstallments" type="number" min="2" max="24" value="2" placeholder="Qtd parcelas"></div>
+      <div class="field"><label>Data de início</label><input id="sStart" type="date"></div>
+      <div class="field full"><label>Observações</label><textarea id="sNotes" placeholder="Pontos a desenvolver, disponibilidade etc."></textarea></div>
+    </div>
+    <div class="btns">
+      <button type="button" class="btn primary" id="saveStudent">Salvar aluno</button>
+      <button type="button" class="btn secondary" id="cancelStudentEdit" style="display:none">Cancelar edição</button>
+    </div>
+   </div>
+  </section>
+
+  <!-- PÁGINA 2: LISTA DE ALUNOS -->
+  <section class="page" id="students">
+   <div class="card">
+    <div class="head">
+      <h2>Alunos Cadastrados</h2>
+      <button type="button" class="btn primary small" onclick="go('register')">+ Cadastrar Aluno</button>
+    </div>
+    <span class="tiny" id="studentCount">0 alunos cadastrados</span>
+    <div class="field" style="margin:10px 0"><label>Buscar aluno</label><input id="studentSearch" placeholder="Digite o nome do aluno"></div>
+    <div id="studentList" class="studentgrid"><div class="empty">Nenhum aluno cadastrado.</div></div>
+   </div>
+  </section>
+
+  <!-- PÁGINA 3: NOVA AVALIAÇÃO -->
+  <section class="page" id="lesson">
+   <!-- PLACAR FLUTUANTE DINÂMICO -->
+   <div class="floating-live-score" id="floatingLiveScore">
+     <div class="live-score-info">
+       <div class="live-stat">
+         <b id="livePoints">0 / 10</b>
+         <span>Pts Negativos</span>
+       </div>
+       <div style="width:1px; height:24px; background:var(--line);"></div>
+       <div class="live-stat">
+         <b id="liveIncap">0 / 2</b>
+         <span>Incapacidades</span>
+       </div>
+     </div>
+     <div class="live-status-badge" id="liveStatusBadge">🟢 APROVADO</div>
+   </div>
+
+   <div class="card">
+    <div class="head"><h2>Identificação da aula</h2><span class="tiny" id="editingLabel">Nova avaliação</span></div>
+    <div class="fields" style="margin-top:10px">
+      
+      <!-- SELETOR ELEGANTE DE ALUNO CADASTRADO -->
+      <div class="field full">
+        <label>Selecionar aluno cadastrado</label>
+        <div id="studentPickerTrigger" class="student-picker-trigger" onclick="openStudentPicker()">
+          <span id="selectedStudentLabel">👤 Escolher aluno cadastrado...</span>
+          <span style="color:var(--cyan); font-weight:900;">▼</span>
+        </div>
+      </div>
+
+      <div class="field full"><label>Nome do aluno *</label><input id="lName" placeholder="Nome do aluno"></div>
+      <div class="field"><label>Data</label><input id="lDate" type="date"></div>
+      <div class="field"><label>Número da aula</label><input id="lNumber" type="number" min="1" value="1" placeholder="Ex.: 1 ou 2"></div>
+      <div class="field"><label>Categoria</label><select id="lCategory"><option>B</option><option>A</option><option>AB</option><option>Outra</option></select></div>
+      <div class="field full"><label>Percurso</label><input id="lRoute" placeholder="Ex.: bairro / via expressa"></div>
+    </div>
+   </div>
+   <div class="card">
+    <div class="head"><h2>Placar da avaliação</h2><span class="tiny" id="faultCount">0 erros</span></div>
+    <div class="metrics">
+      <div class="metric blue"><b id="lPoints">0</b><span>Pontos (Máx: 10)</span></div>
+      <div class="metric"><b id="lIncapacidade">0</b><span>Incapacidades (Máx: 1)</span></div>
+      <div class="metric"><b id="l1">0</b><span>Leves · 1 pt</span></div>
+      <div class="metric"><b id="l2">0</b><span>Médias · 2 pts</span></div>
+    </div>
+    <div class="status" id="lStatus">🟢 APROVADO: Dentro do limite de 10 pontos</div>
+    <div class="note" style="margin-top:10px">Regra de Avaliação: Até 10 pontos = APROVADO. 11 pontos ou mais = REPROVADO. 2 Incapacidades Técnicas = REPROVADO.</div>
+   </div>
+   <div class="card">
+    <div class="head"><h2>Registrar falha observada</h2><span class="tiny">Toque em um item</span></div>
+    <div class="tabs" id="faultTabs">
+      <button type="button" class="tab active" data-f="all">Todas</button>
+      <button type="button" class="tab" data-f="1">Leves (1)</button>
+      <button type="button" class="tab" data-f="2">Médias (2)</button>
+      <button type="button" class="tab" data-f="4">Graves (4)</button>
+      <button type="button" class="tab" data-f="6">Gravíssimas (6)</button>
+      <button type="button" class="tab" data-f="incapacidade">Incapacidade Técnica</button>
+    </div>
+    <div class="faultgrid" id="faultCatalog"></div>
+    <div class="fields" style="margin-top:10px">
+      <div class="field"><label>Falha personalizada</label><input id="customFault" placeholder="Descreva o erro"></div>
+      <div class="field"><label>Classificação</label><select id="customPoints"><option value="1">Leve · 1 ponto</option><option value="2">Média · 2 pontos</option><option value="4">Grave · 4 pontos</option><option value="6">Gravíssima · 6 pontos</option><option value="0">Incapacidade Técnica (Eliminatória)</option></select></div>
+    </div>
+    <div class="btns"><button type="button" class="btn secondary" id="addCustom">Adicionar falha personalizada</button></div>
+   </div>
+   <div class="card">
+    <div class="head"><h2>Registro da avaliação</h2><button type="button" class="btn secondary small" id="undoFault">Desfazer último</button></div>
+    <div id="faultLog" class="empty">Ainda não há falhas registradas.</div>
+    
+    <div style="margin-top:14px; border-top:1px solid var(--line); padding-top:12px;">
+      <h3 style="font-size:13px; margin:0 0 8px 0; color:var(--cyan);">Conteúdos praticados na aula de hoje:</h3>
+      <div class="fields">
+        <label class="checkline"><input id="lParking" type="checkbox"> 🅿️ Estacionamento / Baliza</label>
+        <label class="checkline"><input id="lTraffic" type="checkbox"> 🚦 Condução em Trânsito</label>
+        <label class="checkline"><input id="lControls" type="checkbox"> ⚙️ Comandos e Controles</label>
+        <label class="checkline"><input id="lIndependent" type="checkbox"> 🛣️ Condução Independente</label>
+        <label class="checkline"><input id="lHills" type="checkbox"> 🛑 Parada em Aclive (Rampa)</label>
+        <label class="checkline"><input id="lReverse" type="checkbox"> 🔄 Manobra de Ré e Alinhamento</label>
+        <label class="checkline"><input id="lLanes" type="checkbox"> 🔀 Mudança de Faixa / Ultrapassagem</label>
+        <label class="checkline"><input id="lTurns" type="checkbox"> ↩️ Conversões (Esq / Dir)</label>
+        <label class="checkline"><input id="lRoundabouts" type="checkbox"> 🔄 Rotatórias e Cruzamentos</label>
+        <label class="checkline"><input id="lNight" type="checkbox"> 🌙 Condução Noturna / Visibilidade</label>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:12px"><label>Feedback e plano para a próxima aula</label><textarea id="lFeedback" placeholder="Ex.: treinar observação dos retrovisores, sinalização e controle de embreagem..."></textarea></div>
+
+    <div class="btns">
+      <button type="button" class="btn primary" id="saveLesson">Salvar avaliação</button>
+      <button type="button" class="btn success" id="btnPreviewSummary">Ver Resumo & Enviar WhatsApp</button>
+      <button type="button" class="btn danger" id="clearLesson">Limpar formulário</button>
+    </div>
+   </div>
+  </section>
+
+  <!-- PÁGINA 4: DASHBOARD -->
+  <section class="page" id="dashboard">
+   <div class="metrics">
+    <div class="metric blue"><b id="mStudents">0</b><span>Alunos cadastrados</span></div>
+    <div class="metric"><b id="mLessons">0</b><span>Avaliações salvas</span></div>
+    <div class="metric"><b id="mAvg">0</b><span>Média de pontos</span></div>
+    <div class="metric"><b id="mApproved">0%</b><span>Aprovados (≤10 pts)</span></div>
+   </div>
+   <div class="card">
+    <div class="head"><h2>Última avaliação em andamento</h2><button type="button" class="btn secondary small" onclick="go('lesson')">Abrir avaliação</button></div>
+    <div id="dashCurrent" class="empty">Nenhuma avaliação em andamento.</div>
+   </div>
+   <div class="grid2">
+    <div class="card"><h2>Erros mais frequentes</h2><div id="topErrors" class="empty">Salve avaliações para ver os dados.</div></div>
+    <div class="card"><h2>Pontos por gravidade</h2><div id="severityStats" class="empty">Sem dados suficientes.</div></div>
+   </div>
+   <div class="card">
+    <div class="head"><h2>Alunos que precisam de reforço</h2><span class="tiny">Pela última avaliação</span></div>
+    <div id="needsWork" class="empty">Sem avaliações salvas.</div>
+   </div>
+  </section>
+
+  <!-- RESUMO DA AULA (PREVIEW) -->
+  <section class="page" id="summary">
+   <div class="card">
+    <div class="head">
+      <h2>Resumo da Avaliação</h2>
+      <button type="button" class="btn secondary small" onclick="go('lesson')">← Voltar e Editar</button>
+    </div>
+    <p class="tiny">Confira os detalhes da aula antes de enviar ao aluno pelo WhatsApp:</p>
+    
+    <div id="summaryContent" class="preview-box" style="margin-top:10px;"></div>
+
+    <div class="btns" style="margin-top:15px;">
+      <button type="button" class="btn primary" id="sendZapAction">Enviar relatório no WhatsApp</button>
+      <button type="button" class="btn secondary" onclick="go('lesson')">Voltar à Avaliação</button>
+    </div>
+   </div>
+  </section>
+
+  <!-- HISTÓRICO -->
+  <section class="page" id="history">
+   <div class="card">
+    <div class="head"><h2>Histórico de avaliações</h2><button type="button" class="btn secondary small" id="exportCsv">Exportar CSV</button></div>
+    <div class="fields" style="margin-top:10px">
+      <div class="field"><label>Buscar por aluno</label><input id="hSearch" placeholder="Nome do aluno"></div>
+      <div class="field"><label>Filtrar resultado</label><select id="hResult"><option value="all">Todos</option><option value="within">Aprovados (≤10 pts)</option><option value="over">Reprovados (≥11 pts ou 2 incap.)</option></select></div>
+    </div>
+    <div id="historyList"><div class="empty">Nenhuma avaliação encontrada.</div></div>
+   </div>
+   <div class="card">
+    <h2>Backup e restauração</h2>
+    <div class="btns">
+      <button type="button" class="btn primary" id="backupBtn">Baixar backup completo</button>
+      <label class="btn secondary" for="restoreFile" style="display:inline-flex;align-items:center;margin:0">Restaurar backup JSON</label>
+      <input id="restoreFile" type="file" accept=".json,application/json" style="display:none">
+    </div>
+   </div>
+  </section>
+
+  <!-- CONFIGURAÇÕES -->
+  <section class="page" id="settings">
+   <div class="card">
+    <h2>Preferências de avaliação</h2>
+    <div class="fields">
+      <div class="field full"><label>Instrutor / cabeçalho do relatório</label><input id="instructorName" value="Instrutor Diego Andrade"></div>
+      <div class="field full"><label>Observação padrão do relatório</label><textarea id="reportDisclaimer">Avaliação de treinamento. Não é documento oficial do Detran-RJ.</textarea></div>
+    </div>
+    <div class="btns"><button type="button" class="btn primary" id="saveSettings">Salvar preferências</button></div>
+   </div>
+   <div class="card">
+    <h2>Privacidade e dados</h2>
+    <div class="btns"><button type="button" class="btn danger" id="wipeAll">Apagar todos os dados locais</button></div>
+   </div>
+  </section>
+</div>
+</div>
+
+<div class="bottom no-print">
+  <div class="bottominner">
+    <button type="button" class="btn secondary" onclick="go('register')">+ Novo Cadastro</button>
+    <button type="button" class="btn primary" onclick="newLesson()">+ Nova avaliação</button>
+    <button type="button" class="btn secondary" onclick="go('students')">Alunos</button>
+  </div>
+</div>
+
+<script>
+const KEY='diego_instrutor_pro_v12';
+
+/* Catálogo atualizado conforme Portaria DETRAN/RJ Nº 7.120/2026 */
+const catalog=[
+  /* Grupo 1 - 1 Ponto */
+  ["Colocar o veículo em movimento sem a cautela necessária (Art. 169)", 1, "", "Leve (Art. 169)"],
+  ["Olhar para a marcha (Art. 169)", 1, "", "Leve (Art. 169)"],
+  ["Engrenar ou utilizar as marchas incorretamente (Art. 169)", 1, "", "Leve (Art. 169)"],
+  ["Freio de mão acionado ou não liberado por completo (Art. 169)", 1, "", "Leve (Art. 169)"],
+  ["Porta aberta ou semiaberta (Art. 169)", 1, "", "Leve (Art. 169)"],
+  ["Não saber interpretar os instrumentos do painel (Art. 169)", 1, "", "Leve (Art. 169)"],
+  ["Mudança de direção — cautela (Art. 169)", 1, "", "Leve (Art. 169)"],
+
+  /* Grupo 2 - 2 Pontos */
+  ["Estacionar em desacordo (Art. 181)", 2, "", "Média (Art. 181)"],
+  ["Parar sobre a faixa de pedestre (Art. 183)", 2, "", "Média (Art. 183)"],
+  ["Dirigir com uma das mãos (Art. 252)", 2, "", "Média (Art. 252)"],
+
+  /* Grupo 3 - 4 Pontos */
+  ["Mudança de direção — seta (Art. 196)", 4, "", "Grave (Art. 196)"],
+  ["Deixar de usar o cinto de segurança (Art. 167)", 4, "", "Grave (Art. 167)"],
+  ["Transitar em contramão de direção em vias com sentido duplo (Art. 186)", 4, "", "Grave (Art. 186)"],
+  ["Deixar de guardar distância lateral e frontal (Art. 192)", 4, "", "Grave (Art. 192)"],
+  ["Deixar de indicar seta com antecedência (Art. 196)", 4, "", "Grave (Art. 196)"],
+  ["Limpador de para-brisas (Art. 230)", 4, "", "Grave (Art. 230)"],
+
+  /* Grupo 4 - 6 Pontos */
+  ["Dirigir veículo sem usar lentes corretoras de visão (Art. 162)", 6, "", "Gravíssima (Art. 162)"],
+  ["Avançar sobre meio-fio (Art. 193)", 6, "", "Gravíssima (Art. 193)"],
+  ["Avançar semáforo ou parada obrigatória (Art. 208)", 6, "", "Gravíssima (Art. 208)"],
+
+  /* Grupo 5 - Incapacidade Técnica (2 geram reprovação) */
+  ["Apoio", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Não ajustar espelhos retrovisores", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Tentar movimentar em ponto neutro", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Banco não ajustado", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Dar partida com o veículo já engrenado", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Fazer curvas com a tração em neutro", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Fazer conversão incorretamente", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Interromper o funcionamento do motor", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Não conseguir dar partida", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Perder o controle do veículo (raspar meio-fio)", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Perder o controle do veículo (subir meio-fio) + AA (risco iminente)", 0, "incapacidade", "Incapacidade Técnica + AA"],
+  ["Provocar movimentos irregulares, sem justificativa", 0, "incapacidade", "Incapacidade Técnica"],
+  ["Usar a embreagem antes do freio nas frenagens", 0, "incapacidade", "Incapacidade Técnica"],
+
+  /* Grupo 6 - Ocorrências de Segurança */
+  ["Provocar ou assumir risco iminente de acidente (Ocorrência AA)", 6, "", "Ocorrência de Segurança AA"],
+  ["Condutor sem óculos (Ocorrência AB - 6 pts)", 6, "", "Ocorrência de Segurança AB"],
+
+  /* Grupo 7 - Cola */
+  ["Tentativa de cola (Candidato que deu ou recebeu)", 6, "", "Eliminação / Cola"]
+];
+
+let memoryStorage = { students: [], lessons: [], settings: { limit: 10, instructor: 'Instrutor Diego Andrade', disclaimer: 'Avaliação de treinamento. Não é documento oficial do Detran-RJ.' } };
+
+function loadDB(){
+  try{
+    let data = localStorage.getItem(KEY);
+    if(data) return JSON.parse(data);
+  }catch(e){}
+  return memoryStorage;
+}
+
+let db = loadDB();
+let faults = [];
+let faultFilter = 'all';
+let editingStudent = null;
+let editingLesson = null;
+let currentSummaryData = null;
+let currentStudentPhoto = null;
+let selectedStudentId = null;
+
+function $(id){ return document.getElementById(id); }
+
+function showToast(message, isError = false) {
+  let container = $('toastContainer');
+  if(!container) return;
+  container.innerHTML = '';
+  let t = document.createElement('div');
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.innerHTML = `<div class="toast-icon">${isError ? '✕' : '✓'}</div> <div>${esc(message)}</div>`;
+  container.appendChild(t);
+  setTimeout(() => { if(t.parentNode) t.remove(); }, 3200);
+}
+
+function persist(){
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); }catch(e){ memoryStorage = db; }
+}
+
+function id(){ return Date.now() + Math.floor(Math.random() * 999); }
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function dateNow(){ return new Date().toLocaleDateString('en-CA'); }
+function points(fs){ return (fs || []).reduce((a, f) => a + Number(f.p || 0), 0); }
+function incapacidadeCount(fs){ return (fs || []).filter(f => f.p === 0 || f.cat === 'incapacidade').length; }
+
+function severity(p, cat, tagCode){
+  if(cat === 'incapacidade' || p === 0) return tagCode || 'Incapacidade Técnica';
+  return ({1:'Leve', 2:'Média', 4:'Grave', 6:'Gravíssima'})[p] || (tagCode ? tagCode : 'Personalizada');
+}
+
+/* ==========================================
+   SELEÇÃO DE FOTO VIA FICHEIRO/GALERIA
+   ========================================== */
+
+function setupPhotoInputs() {
+  const galleryInput = $('galleryInput');
+  const choosePhotoBtn = $('choosePhotoBtn');
+
+  if (choosePhotoBtn) {
+    choosePhotoBtn.onclick = () => {
+      if (galleryInput) galleryInput.click();
+    };
+  }
+
+  async function processSelectedPhoto(event) {
+    const file = event.target.files && event.target.files[0];
+
+    if (!file) return;
+
+    if (!file.type || !file.type.startsWith('image/')) {
+      showToast('Selecione um arquivo de imagem válido.', true);
+      event.target.value = '';
+      return;
+    }
+
+    try {
+      showToast('Processando foto...');
+
+      const photo = await resizeAndCompressImage(
+        file,
+        500,
+        500,
+        0.75
+      );
+
+      currentStudentPhoto = photo;
+      updatePhotoPreview(photo);
+      showToast('Foto adicionada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao processar foto:', error);
+      showToast('Não foi possível carregar essa foto.', true);
+    } finally {
+      event.target.value = '';
+    }
+  }
+
+  if (galleryInput) {
+    galleryInput.onchange = processSelectedPhoto;
+  }
+}
+
+/* Redimensiona e comprime as imagens antes de salvar */
+function resizeAndCompressImage(
+  file,
+  maxWidth = 300,
+  maxHeight = 300,
+  quality = 0.7
+) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onerror = () => reject(
+      new Error('Não foi possível ler o arquivo.')
+    );
+
+    reader.onload = event => {
+      const img = new Image();
+
+      img.onerror = () => reject(
+        new Error('Não foi possível abrir a imagem.')
+      );
+
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        const ratio = Math.min(
+          1,
+          maxWidth / width,
+          maxHeight / height
+        );
+
+        width = Math.max(1, Math.round(width * ratio));
+        height = Math.max(1, Math.round(height * ratio));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+          reject(new Error('Não foi possível processar a imagem.'));
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+
+      img.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+setupPhotoInputs();
+
+// Funções de Zoom da Foto
+function openPhotoZoom(photoUrl, studentName) {
+  if(!photoUrl) return;
+  let modalContainer = $('modalContainer');
+  if(!modalContainer) return;
+  
+  modalContainer.innerHTML = `
+    <div class="photo-zoom-overlay" onclick="closePhotoZoom()">
+      <div class="photo-zoom-container" onclick="event.stopPropagation()">
+        <img src="${photoUrl}" alt="Foto Ampliada">
+        <div class="photo-zoom-name">👤 ${esc(studentName)}</div>
+        <button type="button" class="btn secondary small" style="margin-top:12px;" onclick="closePhotoZoom()">Fechar</button>
+      </div>
+    </div>
+  `;
+}
+window.openPhotoZoom = openPhotoZoom;
+
+function closePhotoZoom() {
+  let modalContainer = $('modalContainer');
+  if(modalContainer) modalContainer.innerHTML = '';
+}
+window.closePhotoZoom = closePhotoZoom;
+
+// Modal Customizado para Escolher Aluno Cadastrado
+function openStudentPicker() {
+  let modalContainer = $('modalContainer');
+  if(!modalContainer) return;
+
+  let studentsList = db.students.slice().sort((a,b) => a.name.localeCompare(b.name));
+
+  modalContainer.innerHTML = `
+    <div class="student-picker-modal" onclick="closeStudentPicker()">
+      <div class="student-picker-card" onclick="event.stopPropagation()">
+        <div class="head">
+          <h2>Selecionar Aluno</h2>
+          <button type="button" class="btn secondary small" onclick="closeStudentPicker()">✕ Fechar</button>
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <input id="pickerSearch" placeholder="Pesquisar aluno por nome..." oninput="filterPickerList(this.value)">
+        </div>
+        <div class="student-picker-list" id="pickerListContainer">
+          ${renderPickerItems(studentsList)}
+        </div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => { let i = $('pickerSearch'); if(i) i.focus(); }, 50);
+}
+window.openStudentPicker = openStudentPicker;
+
+function closeStudentPicker() {
+  let modalContainer = $('modalContainer');
+  if(modalContainer) modalContainer.innerHTML = '';
+}
+window.closeStudentPicker = closeStudentPicker;
+
+function renderPickerItems(list) {
+  if(!list.length) return '<div class="empty">Nenhum aluno cadastrado.</div>';
+  return list.map(s => {
+    let done = getStudentDoneLessonsCount(s.id, s.name);
+    let pkg = s.package || 15;
+    let avatarHtml = s.photo 
+      ? `<img src="${s.photo}" class="picker-avatar" alt="Foto">` 
+      : `<div class="picker-avatar">👤</div>`;
+
+    return `
+      <div class="student-picker-item" onclick="selectStudentFromPicker(${s.id})">
+        ${avatarHtml}
+        <div class="picker-info">
+          <strong>${esc(s.name)}</strong>
+          <small>Categoria ${esc(s.category || 'B')} · Aulas: ${done}/${pkg}</small>
+        </div>
+        <span style="color:var(--cyan); font-weight:800; font-size:11px;">Selecionar →</span>
+      </div>
+    `;
+  }).join('');
+}
+
+window.filterPickerList = q => {
+  let query = q.toLowerCase().trim();
+  let filtered = db.students.filter(s => s.name.toLowerCase().includes(query));
+  let container = $('pickerListContainer');
+  if(container) container.innerHTML = renderPickerItems(filtered);
+};
+
+window.selectStudentFromPicker = sid => {
+  let s = db.students.find(x => x.id === sid);
+  if(s) {
+    selectedStudentId = s.id;
+    if($('selectedStudentLabel')) {
+      let done = getStudentDoneLessonsCount(s.id, s.name);
+      $('selectedStudentLabel').textContent = `👤 ${esc(s.name)} (${done}/${s.package || 15} aulas)`;
+    }
+    if($('lName')) $('lName').value = s.name;
+    if($('lCategory')) $('lCategory').value = s.category || 'B';
+    if($('lNumber')) $('lNumber').value = 1;
+    renderLesson();
+  }
+  closeStudentPicker();
+};
+
+function go(page){
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === page));
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  if(page === 'dashboard') renderDashboard();
+  if(page === 'students') renderStudents();
+  if(page === 'history') renderHistory();
+  if(page === 'lesson') renderLesson();
+  const main = document.querySelector('.main-content');
+  if(main) main.scrollTop = 0;
+}
+window.go = go;
+
+document.querySelectorAll('#nav button').forEach(b => { b.onclick = () => go(b.dataset.page); });
+
+const practiceCheckIds = ['lParking','lTraffic','lControls','lIndependent','lHills','lReverse','lLanes','lTurns','lRoundabouts','lNight'];
+
+function newLesson(){
+  editingLesson = null;
+  selectedStudentId = null;
+  faults = [];
+  ['lRoute','lFeedback'].forEach(x => { if($(x))$(x).value = ''; });
+  if($('selectedStudentLabel')) $('selectedStudentLabel').textContent = '👤 Escolher aluno cadastrado...';
+  if($('lName'))$('lName').value = '';
+  if($('lDate'))$('lDate').value = dateNow();
+  if($('lNumber'))$('lNumber').value = '1';
+  if($('lCategory'))$('lCategory').value = 'B';
+  practiceCheckIds.forEach(x => { if($(x))$(x).checked = false; });
+  if($('editingLabel'))$('editingLabel').textContent = 'Nova avaliação';
+  renderLesson();
+  go('lesson');
+}
+window.newLesson = newLesson;
+
+if($('sStart'))$('sStart').value = dateNow();
+if($('lDate'))$('lDate').value = dateNow();
+
+if($('sPaymentType')) {
+  $('sPaymentType').onchange = () => {
+    let isParcelado = $('sPaymentType').value === 'parcelado';
+    if($('installmentsField')) $('installmentsField').style.display = isParcelado ? 'block' : 'none';
+  };
+}
+
+function updatePhotoPreview(imgData) {
+  let container = $('avatarPreviewContainer');
+  let removeBtn = $('removePhotoBtn');
+  if(imgData) {
+    container.innerHTML = `<img src="${imgData}" alt="Foto do aluno" onclick="event.stopPropagation(); openPhotoZoom('${imgData}', 'Foto Atual')">`;
+    if(removeBtn) removeBtn.style.display = 'inline-block';
+  } else {
+    container.innerHTML = '👤';
+    if(removeBtn) removeBtn.style.display = 'none';
+  }
+}
+
+if($('avatarPreviewContainer')) {
+  $('avatarPreviewContainer').onclick = () => {
+    if(currentStudentPhoto) openPhotoZoom(currentStudentPhoto, 'Foto Atual');
+  };
+}
+
+if($('removePhotoBtn')) {
+  $('removePhotoBtn').onclick = () => {
+    currentStudentPhoto = null;
+    updatePhotoPreview(null);
+  };
+}
+
+function getStudentDoneLessonsCount(studentId, studentName){
+  if(!studentId && !studentName) return 0;
+  return db.lessons.filter(l => {
+    let matchId = studentId && l.studentId === studentId;
+    let matchName = studentName && l.student && l.student.toLowerCase().trim() === studentName.toLowerCase().trim();
+    return matchId || matchName;
+  }).reduce((sum, l) => sum + (parseInt(l.number) || 1), 0);
+}
+
+if($('saveStudent')){$('saveStudent').onclick = () => {
+    let name = $('sName').value.trim();
+    if(!name){ showToast('Informe o nome completo do aluno.', true); return; }
+    let data = {
+      name: name,
+      phone: $('sPhone').value.trim(),
+      address: $('sAddress') ? $('sAddress').value.trim() : '',
+      category: $('sCategory').value,
+      package: +$('sPackage').value || 15,
+      price: $('sPrice') ? parseFloat($('sPrice').value) || 0 : 0,
+      paymentType: $('sPaymentType') ? $('sPaymentType').value : 'avista',
+      installments: $('sInstallments') ? +$('sInstallments').value || 1 : 1,
+      start: $('sStart').value,
+      notes: $('sNotes').value.trim(),
+      photo: currentStudentPhoto || null
+    };
+    if(editingStudent){
+      let st = db.students.find(s => s.id === editingStudent);
+      if(st) Object.assign(st, data);
+    } else {
+      db.students.push({ id: id(), ...data, created: new Date().toISOString() });
+    }
+    persist();
+    resetStudentForm();
+    renderStudents();
+    renderDashboard();
+    showToast('Aluno salvo com sucesso!');
+    go('students');
+  };
+}
+
+function resetStudentForm(){
+  editingStudent = null;
+  currentStudentPhoto = null;
+  updatePhotoPreview(null);
+  if($('studentFormTitle'))$('studentFormTitle').textContent = 'Cadastrar Novo Aluno';
+  if($('saveStudent'))$('saveStudent').textContent = 'Salvar aluno';
+  if($('cancelStudentEdit'))$('cancelStudentEdit').style.display = 'none';
+  ['sName','sPhone','sAddress','sNotes','sPrice'].forEach(x => { if($(x))$(x).value = ''; });
+  if($('sCategory'))$('sCategory').value = 'B';
+  if($('sPackage'))$('sPackage').value = '15';
+  if($('sPaymentType')) { $('sPaymentType').value = 'avista'; $('sPaymentType').dispatchEvent(new Event('change')); }
+  if($('sInstallments'))$('sInstallments').value = '2';
+  if($('sStart'))$('sStart').value = dateNow();
+}
+
+if($('cancelStudentEdit'))$('cancelStudentEdit').onclick = resetStudentForm;
+
+function editStudent(sid){
+  let s = db.students.find(x => x.id === sid);
+  if(!s) return;
+  editingStudent = sid;
+  currentStudentPhoto = s.photo || null;
+  updatePhotoPreview(currentStudentPhoto);
+
+  if($('studentFormTitle'))$('studentFormTitle').textContent = 'Editar Aluno';
+  if($('saveStudent'))$('saveStudent').textContent = 'Atualizar aluno';
+  if($('cancelStudentEdit'))$('cancelStudentEdit').style.display = 'inline-block';
+  if($('sName'))$('sName').value = s.name;
+  if($('sPhone'))$('sPhone').value = s.phone || '';
+  if($('sAddress'))$('sAddress').value = s.address || '';
+  if($('sCategory'))$('sCategory').value = s.category || 'B';
+  if($('sPackage'))$('sPackage').value = s.package || 15;
+  if($('sPrice'))$('sPrice').value = s.price || '';
+  if($('sPaymentType')){
+    $('sPaymentType').value = s.paymentType || 'avista';
+    $('sPaymentType').dispatchEvent(new Event('change'));
+  }
+  if($('sInstallments'))$('sInstallments').value = s.installments || 2;
+  if($('sStart'))$('sStart').value = s.start || '';
+  if($('sNotes'))$('sNotes').value = s.notes || '';
+  go('register');
+}
+window.editStudent = editStudent;
+
+function renderStudents(){
+  if(!$('studentList')) return;
+  let q = $('studentSearch') ?$('studentSearch').value.toLowerCase().trim() : '';
+  let list = db.students.filter(s => s.name.toLowerCase().includes(q));
+  if($('studentCount'))$('studentCount').textContent = `${db.students.length} aluno(s) cadastrado(s)`;
+  
+  $('studentList').innerHTML = list.length ? list.map(s => {
+    let done = getStudentDoneLessonsCount(s.id, s.name);
+    let pkg = s.package || 15;
+    let ls = db.lessons.filter(l => l.studentId === s.id || (l.student && l.student.toLowerCase().trim() === s.name.toLowerCase().trim()));
+    let last = ls[0];
+    let paymentStr = s.price ? `R$ ${s.price.toFixed(2)} (${s.paymentType === 'parcelado' ? s.installments + 'x' : 'À vista'})` : 'Valor não informado';
+    
+    let avatarHtml = s.photo 
+      ? `<img src="${s.photo}" class="student-card-avatar" onclick="event.stopPropagation(); openPhotoZoom('${s.photo}', '${esc(s.name)}')" alt="Foto">` 
+      : `<div class="student-card-avatar" style="display:grid;place-items:center;font-size:16px;">👤</div>`;
+
+    return `<div class="student">
+      ${avatarHtml}
+      <div class="student-info">
+        <strong>${esc(s.name)}</strong>
+        <div class="sub">
+          Categoria ${esc(s.category||'B')} · Aulas: <b style="color:var(--cyan)">${done} / ${pkg}</b><br>
+          ${s.address ? '📍 ' + esc(s.address) + '<br>' : ''}
+          💰 ${paymentStr}<br>
+          ${last ? 'Última: ' + esc(last.date) + ' · ' + last.points + ' pts' : 'Sem avaliações'}
+        </div>
+        <div class="btns">
+          <button type="button" class="btn secondary small" onclick="editStudent(${s.id})">Editar</button>
+          <button type="button" class="btn primary small" onclick="startForStudent(${s.id})">Avaliar</button>
+          <button type="button" class="btn danger small" onclick="confirmDeleteStudent(${s.id})">Excluir</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty">Nenhum aluno cadastrado no momento.</div>';
+}
+
+window.startForStudent = sid => {
+  newLesson();
+  selectStudentFromPicker(sid);
+  go('lesson');
+};
+
+window.confirmDeleteStudent = sid => {
+  let s = db.students.find(x => x.id === sid);
+  if(!s) return;
+  let modalContainer = $('modalContainer');
+  if(!modalContainer) return;
+  modalContainer.innerHTML = `
+    <div class="modal-overlay" id="deleteModalOverlay">
+      <div class="modal-card">
+        <div class="modal-icon">✕</div>
+        <h3>Excluir Aluno</h3>
+        <p>Deseja realmente excluir <b>${esc(s.name)}</b>?</p>
+        <div class="modal-btns">
+          <button type="button" class="btn secondary" id="cancelDeleteBtn">Cancelar</button>
+          <button type="button" class="btn danger" id="confirmDeleteBtn">Sim, excluir</button>
+        </div>
+      </div>
+    </div>
+  `;
+  $('cancelDeleteBtn').onclick = () => { modalContainer.innerHTML = ''; };
+  $('confirmDeleteBtn').onclick = () => {
+    db.students = db.students.filter(x => x.id !== sid);
+    persist();
+    renderStudents();
+    renderDashboard();
+    modalContainer.innerHTML = '';
+    showToast(`Aluno "${s.name}" excluído.`);
+  };
+};
+
+if($('studentSearch'))$('studentSearch').oninput = renderStudents;
+
+function renderCatalog(){
+  if(!$('faultCatalog')) return;
+  let list = catalog.map((x, i) => ({ n: x[0], p: x[1], cat: x[2], tagCode: x[3], i })).filter(x => {
+    if(faultFilter === 'all') return true;
+    if(faultFilter === 'incapacidade') return x.cat === 'incapacidade' || x.p === 0;
+    return x.cat !== 'incapacidade' && x.p > 0 && String(x.p) === faultFilter;
+  });
+
+  $('faultCatalog').innerHTML = list.map(x => {
+    let isInc = x.cat === 'incapacidade' || x.p === 0;
+    let tagClass = isInc ? 'p-incapacidade' : (x.p === 0.5 ? 'p05' : 'p' + x.p);
+    let tagText = isInc ? (x.tagCode || 'INCAPACIDADE') : (x.p + ' PT' + (x.p === 1 ? '' : 'S'));
+    return `<button type="button" class="fault" onclick="addFault(${x.i})">
+      <span class="tag ${tagClass}">${esc(tagText)}</span>
+      <strong>${esc(x.n)}</strong>
+      <small>Toque para registrar</small>
+    </button>`;
+  }).join('');
+}
+
+window.addFault = i => {
+  if(!($('lName') &&$('lName').value.trim())){
+    showToast('Selecione um aluno ou informe o nome antes.', true);
+    return;
+  }
+  let x = catalog[i];
+  faults.push({
+    id: id(),
+    name: x[0],
+    p: x[1],
+    cat: x[2] || '',
+    tagCode: x[3] || '',
+    time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  });
+  renderLesson();
+};
+
+if($('faultTabs')){$('faultTabs').onclick = e => {
+    let b = e.target.closest('[data-f]');
+    if(!b) return;
+    faultFilter = b.dataset.f;
+    document.querySelectorAll('#faultTabs .tab').forEach(t => t.classList.toggle('active', t === b));
+    renderCatalog();
+  };
+}
+
+if($('addCustom')){$('addCustom').onclick = () => {
+    let name = $('customFault').value.trim();
+    if(!name){ showToast('Descreva a falha.', true); return; }
+    let pts = +$('customPoints').value;
+    faults.push({
+      id: id(),
+      name: name,
+      p: pts,
+      cat: pts === 0 ? 'incapacidade' : '',
+      tagCode: '',
+      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+    });
+    $('customFault').value = '';
+    renderLesson();
+  };
+}
+
+if($('undoFault')){$('undoFault').onclick = () => { faults.pop(); renderLesson(); }; }
+
+/* =======================================================
+   LÓGICA DINÂMICA DO PLACAR DA AVALIAÇÃO (LIMITE FIXO 10 PTS)
+   ======================================================= */
+function renderLesson(){
+  renderCatalog();
+  let total = points(faults);
+  let incCount = incapacidadeCount(faults);
+  let limit = 10; // Fixado em 10 pontos
+  
+  if($('lPoints'))$('lPoints').textContent = total;
+  if($('lIncapacidade'))$('lIncapacidade').textContent = incCount;
+  if($('l1'))$('l1').textContent = faults.filter(f => f.p === 1 && f.cat !== 'incapacidade').length;
+  if($('l2'))$('l2').textContent = faults.filter(f => f.p === 2 && f.cat !== 'incapacidade').length;
+  if($('faultCount'))$('faultCount').textContent = `${faults.length} falha(s)`;
+
+  if($('livePoints')) $('livePoints').textContent = `${total} / ${limit}`;
+  if($('liveIncap')) $('liveIncap').textContent = `${incCount} / 2`;
+
+  let st = $('lStatus');
+  let liveBadge = $('liveStatusBadge');
+  let livePointsEl = $('livePoints');
+  let liveIncapEl = $('liveIncap');
+  
+  let statusText = '';
+  let isReprovado = false;
+
+  // Lógica de Aprovação/Reprovação:
+  // - 0 a 10 pontos: Aprovado
+  // - 11 pontos ou mais: Reprovado
+  // - 2 incapacidades técnicas ou mais: Reprovado
+  if (incCount >= 2) {
+    statusText = `🔴 REPROVADO (2 Incap.)`;
+    isReprovado = true;
+  } else if (total > limit) {
+    statusText = `🔴 REPROVADO (${total} Pts)`;
+    isReprovado = true;
+  } else {
+    statusText = `🟢 APROVADO`;
+    isReprovado = false;
+  }
+
+  // Atualiza cores e badge dinamicamente
+  if (liveBadge) {
+    liveBadge.className = 'live-status-badge ' + (isReprovado ? 'bad' : '');
+    liveBadge.textContent = statusText;
+  }
+
+  if (livePointsEl) livePointsEl.style.color = total > 10 ? 'var(--red)' : 'var(--cyan)';
+  if (liveIncapEl) liveIncapEl.style.color = incCount >= 2 ? 'var(--red)' : 'var(--cyan)';
+
+  if (st) {
+    if (isReprovado) {
+      st.className = 'status bad';
+      st.textContent = incCount >= 2 
+        ? `🚨 REPROVADO: Atingiu 2 ou mais Incapacidades Técnicas!` 
+        : `🚨 REPROVADO: Ultrapassou o limite máximo de 10 pontos (${total} pts)`;
+    } else {
+      st.className = 'status';
+      st.textContent = `🟢 APROVADO: Dentro do limite de 10 pontos (${total} pts)`;
+    }
+  }
+
+  if($('faultLog')){$('faultLog').innerHTML = faults.length ? faults.map((f, i) => 
+      `<div class="listrow">
+        <div>
+          <strong>${esc(f.name)}</strong>
+          <small>${severity(f.p, f.cat, f.tagCode)} · ${esc(f.time || '')}</small>
+        </div>
+        <div class="right">
+          <span class="score">${f.p} pt${f.p > 1 ? 's' : ''}</span><br>
+          <button type="button" class="btn danger small" onclick="removeFault(${i})">Remover</button>
+        </div>
+      </div>`
+    ).join('') : '<div class="empty">Ainda não há falhas registradas.</div>';
+  }
+}
+
+window.removeFault = i => { faults.splice(i, 1); renderLesson(); };
+
+function collectLesson(){
+  let name = $('lName').value.trim();
+  if(!name){ showToast('Informe o nome do aluno.', true); return null; }
+  let s = db.students.find(x => x.id === selectedStudentId) || db.students.find(x => x.name.toLowerCase().trim() === name.toLowerCase().trim());
+  return {
+    id: editingLesson || id(),
+    studentId: s ? s.id : null,
+    student: name,
+    date: $('lDate').value || dateNow(),
+    number: $('lNumber').value || '1',
+    category: $('lCategory').value,
+    route: $('lRoute').value.trim(),
+    feedback: $('lFeedback').value.trim(),
+    practice: {
+      parking: $('lParking') ? $('lParking').checked : false,
+      traffic: $('lTraffic') ? $('lTraffic').checked : false,
+      controls: $('lControls') ? $('lControls').checked : false,
+      independent: $('lIndependent') ? $('lIndependent').checked : false,
+      hills: $('lHills') ? $('lHills').checked : false,
+      reverse: $('lReverse') ? $('lReverse').checked : false,
+      lanes: $('lLanes') ? $('lLanes').checked : false,
+      turns: $('lTurns') ? $('lTurns').checked : false,
+      roundabouts: $('lRoundabouts') ? $('lRoundabouts').checked : false,
+      night: $('lNight') ? $('lNight').checked : false
+    },
+    faults: faults.map(f => ({ ...f })),
+    points: points(faults),
+    incapacidades: incapacidadeCount(faults),
+    created: new Date().toISOString(),
+    limit: 10
+  };
+}
+
+if($('saveLesson')){$('saveLesson').onclick = () => {
+    let r = collectLesson();
+    if(!r) return;
+    let idx = db.lessons.findIndex(l => l.id === r.id);
+    if(idx >= 0) db.lessons[idx] = r;
+    else db.lessons.unshift(r);
+    editingLesson = null;
+    persist();
+    renderDashboard();
+    renderHistory();
+    renderStudents();
+    showToast('Avaliação salva!');
+  };
+}
+
+function clearForm(){
+  editingLesson = null;
+  selectedStudentId = null;
+  faults = [];
+  ['lRoute','lFeedback'].forEach(x => { if($(x))$(x).value = ''; });
+  if($('selectedStudentLabel')) $('selectedStudentLabel').textContent = '👤 Escolher aluno cadastrado...';
+  if($('lName'))$('lName').value = '';
+  if($('lDate'))$('lDate').value = dateNow();
+  if($('lNumber'))$('lNumber').value = '1';
+  if($('lCategory'))$('lCategory').value = 'B';
+  practiceCheckIds.forEach(x => { if($(x))$(x).checked = false; });
+  renderLesson();
+  showToast('Formulário limpo.');
+}
+if($('clearLesson'))$('clearLesson').onclick = clearForm;
+
+function openLesson(lid){
+  let l = db.lessons.find(x => x.id === lid);
+  if(!l) return;
+  editingLesson = l.id;
+  selectedStudentId = l.studentId || null;
+  faults = (l.faults || []).map(f => ({ ...f }));
+  
+  if($('selectedStudentLabel')) {
+    let sObj = db.students.find(x => x.id === l.studentId || x.name.toLowerCase().trim() === l.student.toLowerCase().trim());
+    if(sObj) {
+      let done = getStudentDoneLessonsCount(sObj.id, sObj.name);
+      $('selectedStudentLabel').textContent = `👤 ${esc(sObj.name)} (${done}/${sObj.package || 15} aulas)`;
+    } else {
+      $('selectedStudentLabel').textContent = `👤 ${esc(l.student)}`;
+    }
+  }
+
+  if($('lName'))$('lName').value = l.student;
+  if($('lDate'))$('lDate').value = l.date;
+  if($('lNumber'))$('lNumber').value = l.number || '1';
+  if($('lCategory'))$('lCategory').value = l.category || 'B';
+  if($('lRoute'))$('lRoute').value = l.route || '';
+  if($('lFeedback'))$('lFeedback').value = l.feedback || '';
+  
+  if($('lParking'))$('lParking').checked = !!l.practice?.parking;
+  if($('lTraffic'))$('lTraffic').checked = !!l.practice?.traffic;
+  if($('lControls'))$('lControls').checked = !!l.practice?.controls;
+  if($('lIndependent'))$('lIndependent').checked = !!l.practice?.independent;
+  if($('lHills'))$('lHills').checked = !!l.practice?.hills;
+  if($('lReverse'))$('lReverse').checked = !!l.practice?.reverse;
+  if($('lLanes'))$('lLanes').checked = !!l.practice?.lanes;
+  if($('lTurns'))$('lTurns').checked = !!l.practice?.turns;
+  if($('lRoundabouts'))$('lRoundabouts').checked = !!l.practice?.roundabouts;
+  if($('lNight'))$('lNight').checked = !!l.practice?.night;
+
+  renderLesson();
+  go('lesson');
+}
+window.openLesson = openLesson;
+
+function confirmDeleteLesson(lid){
+  let l = db.lessons.find(x => x.id === lid);
+  if(!l) return;
+  let modalContainer = $('modalContainer');
+  if(!modalContainer) return;
+  modalContainer.innerHTML = `
+    <div class="modal-overlay" id="deleteLessonModalOverlay">
+      <div class="modal-card">
+        <div class="modal-icon">✕</div>
+        <h3>Excluir Avaliação</h3>
+        <p>Deseja excluir a avaliação de <b>${esc(l.student)}</b> do dia <b>${esc(l.date)}</b>?</p>
+        <div class="modal-btns">
+          <button type="button" class="btn secondary" id="cancelDeleteLessonBtn">Cancelar</button>
+          <button type="button" class="btn danger" id="confirmDeleteLessonBtn">Sim, excluir</button>
+        </div>
+      </div>
+    </div>
+  `;
+  $('cancelDeleteLessonBtn').onclick = () => { modalContainer.innerHTML = ''; };
+  $('confirmDeleteLessonBtn').onclick = () => {
+    db.lessons = db.lessons.filter(x => x.id !== lid);
+    persist();
+    renderHistory();
+    renderDashboard();
+    renderStudents();
+    modalContainer.innerHTML = '';
+    showToast('Avaliação excluída com sucesso!');
+  };
+}
+window.confirmDeleteLesson = confirmDeleteLesson;
+
+function renderHistory(){
+  if(!$('historyList')) return;
+  let q = $('hSearch') ?$('hSearch').value.toLowerCase().trim() : '';
+  let res = $('hResult') ?$('hResult').value : 'all';
+  let ls = db.lessons.filter(l => l.student.toLowerCase().includes(q)).filter(l => {
+    let isReprovado = (l.incapacidades ?? incapacidadeCount(l.faults)) >= 2 || l.points > 10;
+    if(res === 'all') return true;
+    if(res === 'within') return !isReprovado;
+    if(res === 'over') return isReprovado;
+    return true;
+  });
+  
+  $('historyList').innerHTML = ls.length ? ls.map(l => {
+    return `<div class="listrow">
+      <div>
+        <strong>${esc(l.student)}</strong>
+        <small>${esc(l.date)} · Aula: ${esc(l.number || '1')} · ${l.points} pts</small>
+      </div>
+      <div class="right" style="display:flex; gap:6px; align-items:center;">
+        <button type="button" class="btn secondary small" onclick="openLesson(${l.id})">Abrir</button>
+        <button type="button" class="btn danger small" onclick="confirmDeleteLesson(${l.id})">Excluir</button>
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty">Nenhuma avaliação encontrada.</div>';
+}
+
+if($('hSearch'))$('hSearch').oninput = renderHistory;
+if($('hResult'))$('hResult').onchange = renderHistory;
+
+function renderDashboard(){
+  let lessons = db.lessons;
+  let avg = lessons.length ? Math.round(lessons.reduce((a, l) => a + l.points, 0) / lessons.length) : 0;
+  let approvedCount = lessons.filter(l => l.points <= 10 && (l.incapacidades ?? incapacidadeCount(l.faults)) < 2).length;
+  
+  if($('mStudents'))$('mStudents').textContent = db.students.length;
+  if($('mLessons'))$('mLessons').textContent = lessons.length;
+  if($('mAvg'))$('mAvg').textContent = avg;
+  if($('mApproved'))$('mApproved').textContent = (lessons.length ? Math.round(100 * approvedCount / lessons.length) : 0) + '%';
+  
+  let current = $('dashCurrent');
+  if(current){
+    if(lessons.length){
+      let l = lessons[0];
+      current.innerHTML = `<strong>${esc(l.student)}</strong><div class="tiny">${esc(l.date)} · ${l.points} pontos</div><div class="btns"><button type="button" class="btn secondary small" onclick="openLesson(${l.id})">Abrir avaliação</button></div>`;
+    } else {
+      current.innerHTML = '<div class="empty">Nenhuma avaliação salva ainda.</div>';
+    }
+  }
+
+  let counts = {};
+  lessons.forEach(l => l.faults.forEach(f => counts[f.name] = (counts[f.name] || 0) + 1));
+  let top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if($('topErrors')){$('topErrors').innerHTML = top.length ? top.map(([n, c]) => 
+      `<div class="barrow"><span>${esc(n)}</span><div class="bartrack"><div class="barfill" style="width:${Math.max(5, c / Math.max(...top.map(x => x[1])) * 100)}%"></div></div><b>${c}</b></div>`
+    ).join('') : '<div class="empty">Sem dados.</div>';
+  }
+
+  let sev = [1,2,4,6].map(p => ({ p, c: lessons.reduce((a, l) => a + l.faults.filter(f => f.p === p && f.cat !== 'incapacidade').length, 0) }));
+  let max = Math.max(1, ...sev.map(x => x.c));
+  if($('severityStats')){$('severityStats').innerHTML = sev.map(x => 
+      `<div class="barrow"><span>${severity(x.p)}</span><div class="bartrack"><div class="barfill" style="width:${x.c / max * 100}%"></div></div><b>${x.c}</b></div>`
+    ).join('');
+  }
+}
+
+/* =======================================================
+   GERAÇÃO ANIMADA E DESCONTRAÍDA DO TEXTO DO WHATSAPP
+   ======================================================= */
+function generateZapText(r){
+  let instr = ($('instructorName') ? $('instructorName').value : '') || 'Instrutor Diego Andrade';
+  let incs = r.incapacidades ?? incapacidadeCount(r.faults);
+  let isReprovado = incs >= 2 || r.points > 10;
+  let sObj = db.students.find(x => x.id === r.studentId || x.name.toLowerCase().trim() === r.student.toLowerCase().trim());
+  let pkgTotal = sObj ? (sObj.package || 15) : 15;
+
+  let text = `🚗💨 *RELATÓRIO DE EVOLUÇÃO* 🏁\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `👤 *Aluno(a):* ${r.student}\n`;
+  text += `👨‍🏫 *Instrutor:* ${instr}\n`;
+  text += `📅 *Data:* ${r.date} | 🚘 *Aula:* ${r.number} de ${pkgTotal}\n`;
+  text += `🏷️ *Categoria:* ${r.category || 'B'}\n`;
+  if (r.route) text += `📍 *Percurso:* ${r.route}\n`;
+
+  // Conteúdos Praticados
+  let p = r.practice || {};
+  let praticados = [];
+  if (p.parking) praticados.push('🅿️ Baliza & Estacionamento');
+  if (p.traffic) praticados.push('🚦 Domínio no Trânsito');
+  if (p.controls) praticados.push('⚙️ Pedais e Comandos');
+  if (p.independent) praticados.push('🛣️ Condução Independente');
+  if (p.hills) praticados.push('🛑 Controle de Rampa (Aclive)');
+  if (p.reverse) praticados.push('🔄 Alinhamento & Ré');
+  if (p.lanes) praticados.push('🔀 Mudança de Faixa');
+  if (p.turns) praticados.push('↩️ Conversões com Segurança');
+  if (p.roundabouts) praticados.push('🔄 Rotatórias');
+  if (p.night) praticados.push('🌙 Treino Noturno');
+
+  if (praticados.length > 0) {
+    text += `\n🎯 *O QUE TREINAMOS HOJE:*\n`;
+    praticados.forEach(item => { text += `  ✓ ${item}\n`; });
+  }
+
+  // Falhas Registradas
+  text += `\n📝 *PONTOS DE ATENÇÃO:*\n`;
+  if (r.faults && r.faults.length > 0) {
+    r.faults.forEach((f, i) => {
+      let desc = severity(f.p, f.cat, f.tagCode);
+      let ptsStr = (f.p === 0 || f.cat === 'incapacidade') ? 'Incapacidade Técnica' : `${f.p} pt(s)`;
+      text += `  • *${f.name}*\n    └ _${desc} • ${ptsStr}_\n`;
+    });
+  } else {
+    text += `  🌟 *Perfeito! Nenhuma falha cometida na aula!*\n`;
+  }
+
+  text += `\n📊 *RESUMO DO DESEMPENHO:*\n`;
+  text += `• Pontos Perdidos: *${r.points}* (Limite: 10)\n`;
+  text += `• Incapacidades: *${incs}* (Limite: 1)\n\n`;
+
+  if (isReprovado) {
+    text += `📌 *Resultado da Aula:* ⚠️ *PRECISA DE AJUSTES*\n`;
+    text += `💪 _Sem problemas! Cada erro é uma chance de aprender. Foco no treino!_\n`;
+  } else {
+    text += `📌 *Resultado da Aula:* 🎉 *EXCELENTE! DENTRO DA META*\n`;
+    text += `🚀 _Mandou muito bem! Continue com essa mesma dedicação!_\n`;
+  }
+
+  // Feedback e Orientações
+  if (r.feedback) {
+    text += `\n💬 *DICA DO INSTRUTOR:*\n`;
+    text += `_"${r.feedback}"_\n`;
+  }
+
+  text += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `🏁 *Rumo à Aprovacão! Vamos pra cima!* 🚗💨`;
+
+  return text;
+}
+
+/* =======================================================
+   ENVIO DIRETO VIA WHATSAPP
+   ======================================================= */
+async function shareViaZap(r) {
+  try {
+    const texto = encodeURIComponent(generateZapText(r));
+    const urlZap = `https://wa.me/?text=${texto}`;
+    
+    // Abre o WhatsApp diretamente com o texto do relatório formatado
+    window.open(urlZap, '_blank');
+    
+    if (typeof showToast === 'function') {
+      showToast('Redirecionando para o WhatsApp...');
+    }
+  } catch (e) {
+    console.error('Erro ao abrir o WhatsApp:', e);
+    
+    if (typeof showToast === 'function') {
+      showToast('Erro ao abrir o WhatsApp', true);
+    }
+  }
+}
+
+function buildReportHtml(r){
+  let instr = ($('instructorName') ?$('instructorName').value : '') || 'Instrutor Diego Andrade';
+  let sObj = db.students.find(x => x.id === r.studentId || x.name.toLowerCase().trim() === r.student.toLowerCase().trim());
+  let photoHtml = sObj && sObj.photo ? `<img src="${sObj.photo}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:1px solid #0284c7;margin-right:10px;vertical-align:middle;">` : '';
+
+  let incs = r.incapacidades ?? incapacidadeCount(r.faults);
+  let isReprovado = incs >= 2 || r.points > 10;
+
+  let p = r.practice || {};
+  let praticados = [];
+  if (p.parking) praticados.push('Estacionamento / Baliza');
+  if (p.traffic) praticados.push('Condução em Trânsito');
+  if (p.controls) praticados.push('Comandos e Controles');
+  if (p.independent) praticados.push('Condução Independente');
+  if (p.hills) praticados.push('Parada em Aclive (Rampa)');
+  if (p.reverse) praticados.push('Manobra de Ré');
+  if (p.lanes) praticados.push('Mudança de Faixa');
+  if (p.turns) praticados.push('Conversões');
+  if (p.roundabouts) praticados.push('Rotatórias');
+  if (p.night) praticados.push('Condução Noturna');
+
+  let faultsListHtml = (r.faults && r.faults.length)
+    ? r.faults.map(f => `<li><b>${esc(f.name)}</b> - <i>${severity(f.p, f.cat, f.tagCode)} (${f.p} pts)</i></li>`).join('')
+    : '<li><i>Nenhuma falha cometida! Excelente!</i></li>';
+
+  return `
+    <div style="font-family: Arial, sans-serif; color: #1e293b; line-height: 1.5;">
+      <div style="display: flex; align-items: center; border-bottom: 3px solid #0284c7; padding-bottom: 12px; margin-bottom: 15px;">
+        ${photoHtml}
+        <div>
+          <h1 style="color: #0f172a; margin: 0; font-size: 18px;">${esc(r.student)}</h1>
+          <p style="color: #64748b; margin: 0; font-size: 11px;">Instrutor: ${esc(instr)} • Data: ${esc(r.date)} • Aula nº ${esc(r.number)}</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 8px;">
+        <p style="margin: 0 0 4px 0;"><b>Status:</b> ${isReprovado ? '<span style="color:#e11d48;font-weight:bold;">⚠️ Precisa de Ajustes (Reprovado)</span>' : '<span style="color:#16a34a;font-weight:bold;">🎉 Excelente! Aprovado</span>'}</p>
+        <p style="margin: 0;"><b>Pontuação Total:</b> ${r.points} Pts (Máx: 10) | <b>Incapacidades:</b> ${incs} (Máx: 1)</p>
+      </div>
+
+      ${praticados.length ? `<p style="margin: 8px 0 4px 0;"><b>Conteúdos Praticados:</b> ${praticados.join(', ')}</p>` : ''}
+
+      <p style="margin: 12px 0 4px 0;"><b>Pontos de Atenção:</b></p>
+      <ul style="margin: 0; padding-left: 20px; font-size: 11px;">
+        ${faultsListHtml}
+      </ul>
+
+      ${r.feedback ? `<div style="margin-top: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px;"><b>Dica do Instrutor:</b><br><i>${esc(r.feedback)}</i></div>` : ''}
+    </div>
+  `;
+}
+
+if($('btnPreviewSummary')){$('btnPreviewSummary').onclick = () => {
+    let r = collectLesson();
+    if(!r) return;
+    currentSummaryData = r;
+    $('summaryContent').innerHTML = buildReportHtml(r);
+    go('summary');
+  };
+}
+
+if($('sendZapAction')){$('sendZapAction').onclick = () => { if(currentSummaryData) shareViaZap(currentSummaryData); }; }
+
+if($('saveSettings')){$('saveSettings').onclick = () => {
+    db.settings = { limit: 10, instructor: $('instructorName').value.trim(), disclaimer: $('reportDisclaimer').value.trim() };
+    persist();
+    renderLesson();
+    showToast('Preferências salvas!');
+  };
+}
+
+if($('wipeAll')){$('wipeAll').onclick = () => {
+    if(confirm('Apagar todos os dados?')){
+      db = { students: [], lessons: [], settings: { limit: 10, instructor: 'Instrutor Diego Andrade', disclaimer: '' } };
+      persist();
+      renderAll();
+      showToast('Dados apagados.', true);
+    }
+  };
+}
+
+function renderAll(){
+  if($('instructorName'))$('instructorName').value = db.settings.instructor || 'Instrutor Diego Andrade';
+  if($('reportDisclaimer'))$('reportDisclaimer').value = db.settings.disclaimer || '';
+  renderStudents();
+  renderCatalog();
+  renderLesson();
+  renderHistory();
+  renderDashboard();
+}
+
+renderAll();
+</script>
+</body>
+</html>
